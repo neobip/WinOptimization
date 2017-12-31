@@ -1,7 +1,7 @@
 @echo off
 title Windows 10 Setup Script -- by TJ
 
-set installDir="%systemroot%\MaintDirectory"
+set installDir="%systemroot%\Maintainence"
 set updateuser=MaintUser
 
 echo This script should be run as administrator. 
