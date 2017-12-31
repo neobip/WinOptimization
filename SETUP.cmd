@@ -27,33 +27,30 @@ if %enableAdmin%== Y (
 )
 
 if %disableLegacySearch%== Y (
-	echo Stopping Windows Legacy Search.
-	net stop WSearch
+    echo Stopping Windows Legacy Search.
+    net stop WSearch
 )
 
 if %enableDiskCleanup%== Y (
     echo Configuring Disk Cleanup. You will be asked about temporary files to remove from your system periodically.
-	echo If you are in doubt, select everything except user files and thumbnails.
-	PAUSE
-	%systemroot%\SYSTEM32\cleanmgr.exe /Sageset:15
+    echo If you are in doubt, select everything except user files and thumbnails.
+    PAUSE
+    %systemroot%\SYSTEM32\cleanmgr.exe /Sageset:15
 )
 
 if %enableRemoteSignedPS%== Y (
-	:: Enable Execution of Powershell Scripts - Generated registry values below.
-	echo Installing registry keys required to run remote Powershell Scripts.
-	REG add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PowerShell\1\ShellIds\Microsoft.PowerShell" /v ExecutionPolicy /t REG_SZ /d "RemoteSigned" /f
-	REG add "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\PowerShell\1\ShellIds\Microsoft.PowerShell" /v ExecutionPolicy /t REG_SZ /d "RemoteSigned" /f
+    :: Enable Execution of Powershell Scripts - Generated registry values below.
+    echo Installing registry keys required to run remote Powershell Scripts.
+    REG add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PowerShell\1\ShellIds\Microsoft.PowerShell" /v ExecutionPolicy /t REG_SZ /d "RemoteSigned" /f
+    REG add "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\PowerShell\1\ShellIds\Microsoft.PowerShell" /v ExecutionPolicy /t REG_SZ /d "RemoteSigned" /f
 	
-	echo Switching to Advanced Setup (Powershell.)
-	echo Press Enter twice to confirm.
+    echo Switching to Advanced Setup (Powershell.)
+    echo Press Enter twice to confirm.
 
-	powershell C:\MaintDirectory\Scripts\PowershellSetup.ps1
+    powershell C:\MaintDirectory\Scripts\PowershellSetup.ps1
 
-	::Evaluate This:
-	::powershell C:\MaintDirectory\Scripts\Set-Privacy.ps1 -Strong -Admin
-
-	:: This has to come after AdvancedSetup, or it will fail.
-	:: Do not move
-	echo Adding MaintUser to Admin Group.
-	net localgroup administrators /add %updateuser%
+    :: This has to come after Powershell or user will not be created with random password.
+    :: Do not move
+    echo Adding MaintUser to Admin Group.
+    net localgroup administrators /add %updateuser%
 )
